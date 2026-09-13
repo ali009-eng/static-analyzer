@@ -45,5 +45,6 @@ func main() {
 		}
 
 		checkUncheckedErrors(tokens, node)
+		checkCyclomaticComplexity(tokens, node)
 	}
 }

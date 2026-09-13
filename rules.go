@@ -50,7 +50,8 @@ func checkUncheckedErrors(fset *token.FileSet, node ast.Node) {
 			}
 
 			if !isProperErrCheck {
-				fmt.Printf("Unchecked error at %s\n", fset.Position(assign.Pos()))
+				pos := fset.Position(assign.Pos())
+				fmt.Printf(" %s:%d:%d: unchecked error\n", pos.Filename, pos.Line, pos.Column)
 			}
 		}
 
