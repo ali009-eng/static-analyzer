@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"go/parser"
 	"go/token"
@@ -11,13 +12,16 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("usage: analyzer <file.go or directory>")
+
+	rule := flag.String("rule", "", "rule to check")
+	flag.Parse()
+	if len(flag.Args()) < 1 {
+		fmt.Println("usage: analyzer [--rule=name] <file.go or directory>")
 		os.Exit(1)
 	}
+	fmt.Println("rule:", *rule)
 
-	target := os.Args[1]
-
+	target := flag.Args()[0]
 	var filesToCheck []string
 	info, err := os.Stat(target)
 	if err != nil {
@@ -44,7 +48,12 @@ func main() {
 			continue
 		}
 
-		checkUncheckedErrors(tokens, node)
-		checkCyclomaticComplexity(tokens, node)
+		if *rule == "" || *rule == "errcheck" {
+			checkUncheckedErrors(tokens, node)
+		}
+
+		if *rule == "" || *rule == "complexity" {
+			checkCyclomaticComplexity(tokens, node)
+		}
 	}
 }
